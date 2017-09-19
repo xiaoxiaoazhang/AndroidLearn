@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">LanguageDemo</string>
+    <string name="hello">hello</string>
+    <string name="language_chioce_title">语言选择</string>
+    <string name="language_save">保存</string>
+    <string name="language_CN">中文</string>
+    <string name="language_EN">英文</string>
+    <string name="language_VI">越南文</string>
+    <string name="language_FR">法文</string>
+</resources>
