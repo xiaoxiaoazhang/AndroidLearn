@@ -1,1 +1,1 @@
-include ':LanguageDemo'
+include ':LanguageDemo', ':camerademo'
