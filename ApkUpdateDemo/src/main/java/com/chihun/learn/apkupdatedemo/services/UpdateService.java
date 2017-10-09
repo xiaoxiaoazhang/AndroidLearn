@@ -31,7 +31,6 @@ public class UpdateService extends Service {
      * 接收下载完的广播
      **/
     DownloadCompleteReceiver receiver;
-    DownloadCompleteReceiver
 
     /**
      * 下载新版本
