@@ -31,7 +31,7 @@ public class UpdateService extends Service {
      * 接收下载完的广播
      **/
     DownloadCompleteReceiver receiver;
-
+    UpdataBroadcastReceiver receiver2;
     /**
      * 下载新版本
      *
@@ -53,11 +53,11 @@ public class UpdateService extends Service {
             request.setMimeType("application/vnd.android.package-archive");
             String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Downloads/";
             Log.i(TAG, "dir: " + dir);
-            File file = new File(dir, "juyoubang.apk");
+            File file = new File(dir, "baidumusic.apk");
             if (file.exists()) {
                 file.delete();
             }
-            request.setDestinationInExternalPublicDir(dir, "juyoubang.apk");
+            request.setDestinationInExternalPublicDir(dir, "baidumusic.apk");
             long refernece = downloadManager.enqueue(request);
             SharePreHelper.getInstance(context).setLong("refernece", refernece);
             //注册下载广播
@@ -80,8 +80,8 @@ public class UpdateService extends Service {
 
         manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
 
-        receiver = new DownloadCompleteReceiver();
-
+//        receiver = new DownloadCompleteReceiver();
+        receiver2 = new UpdataBroadcastReceiver();
         //设置下载地址
         DownloadManager.Request down = new DownloadManager.Request(
                 Uri.parse(url));
@@ -109,10 +109,10 @@ public class UpdateService extends Service {
         down.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, "baidumusic.apk");
         Log.i(TAG, "dir2: " + Environment.DIRECTORY_DOWNLOADS);
         // 将下载请求放入队列
-        manager.enqueue(down);
-
+        long refernece = manager.enqueue(down);
+        SharePreHelper.getInstance(this).setLong("refernece", refernece);
         //注册下载广播
-        registerReceiver(receiver, new IntentFilter(
+        registerReceiver(receiver2, new IntentFilter(
                 DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
@@ -131,6 +131,9 @@ public class UpdateService extends Service {
         // 注销下载广播
         if (receiver != null) {
             unregisterReceiver(receiver);
+        }
+        if (receiver2 != null) {
+            unregisterReceiver(receiver2);
         }
 
         super.onDestroy();
@@ -164,14 +167,19 @@ public class UpdateService extends Service {
 
         @SuppressLint("NewApi")
         public void onReceive(Context context, Intent intent) {
-            long myDwonloadID = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            long refernece = SharePreHelper.getInstance(UpdateService.this).getLong("refernece", 0);
-            if (refernece != myDwonloadID) {
-                return;
+            if (intent.getAction().equals(
+                    DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+                Toast.makeText(context, "download finish!", Toast.LENGTH_SHORT).show();
+                long myDwonloadID = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+                long refernece = SharePreHelper.getInstance(UpdateService.this).getLong("refernece", 0);
+                Log.i(TAG, "myDwonloadID: " + myDwonloadID + " refernece: " + refernece);
+                if (refernece != myDwonloadID) {
+                    return;
+                }
+                DownloadManager dManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+                Uri downloadFileUri = dManager.getUriForDownloadedFile(myDwonloadID);
+                installAPK(context, downloadFileUri);
             }
-            DownloadManager dManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-            Uri downloadFileUri = dManager.getUriForDownloadedFile(myDwonloadID);
-            installAPK(context, downloadFileUri);
         }
 
         private void installAPK(Context context, Uri apk) {
