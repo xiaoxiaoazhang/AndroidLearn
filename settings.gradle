@@ -1,2 +1,3 @@
-//include ':LanguageDemo'
+include ':LanguageDemo', ':ApkUpdateDemo', ':BasicUIDemo'
 include ':camerademo'
+include ':RetrofitDemo'
