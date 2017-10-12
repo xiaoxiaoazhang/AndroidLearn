@@ -1,9 +1,16 @@
 package com.chihun.learn.camerademo;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -25,6 +32,8 @@ public class IdCardActivity extends Activity implements View.OnClickListener {
     private boolean isBackClick;
     private String frontPhotoName;
     private String backPhotoName;
+
+    private static final int REQUEST_CAMERA_PERMISSION = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,23 +62,33 @@ public class IdCardActivity extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.iv_idcard_front_camera:
                 isBackClick = false;
-//                if (Build.VERSION_CODES.LOLLIPOP <= Build.VERSION.SDK_INT) {
-//                    startActivityForResult(new Intent(this, Camera2Activity.class), CameraActivity.REQUEST_CODE);
-//                } else {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    requestCameraPermission();
+                    return;
+                }
+                if (Build.VERSION_CODES.LOLLIPOP <= Build.VERSION.SDK_INT) {
+                    startActivityForResult(new Intent(this, Camera2Activity.class), CameraActivity.REQUEST_CODE);
+                } else {
                     startActivityForResult(new Intent(this, CameraActivity.class), CameraActivity.REQUEST_CODE);
-//                }
+                }
                 break;
             case R.id.iv_idcard_back_camera:
                 isBackClick = true;
-//                if (Build.VERSION_CODES.LOLLIPOP <= Build.VERSION.SDK_INT) {
-//                    Intent intent = new Intent(this, Camera2Activity.class);
-//                    intent.putExtra("EXTRA_IS_BACK", true);
-//                    startActivityForResult(intent, CameraActivity.REQUEST_CODE);
-//                } else {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    requestCameraPermission();
+                    return;
+                }
+                if (Build.VERSION_CODES.LOLLIPOP <= Build.VERSION.SDK_INT) {
+                    Intent intent = new Intent(this, Camera2Activity.class);
+                    intent.putExtra("EXTRA_IS_BACK", true);
+                    startActivityForResult(intent, CameraActivity.REQUEST_CODE);
+                } else {
                     Intent intent = new Intent(this, CameraActivity.class);
                     intent.putExtra("EXTRA_IS_BACK", true);
                     startActivityForResult(intent, CameraActivity.REQUEST_CODE);
-//                }
+                }
                 break;
         }
     }
@@ -86,6 +105,52 @@ public class IdCardActivity extends Activity implements View.OnClickListener {
                     idcardFront.setImageBitmap(ImageUtils.readImageFromLocal2(this, frontPhotoName));
                 }
             }
+        }
+    }
+
+    private void requestCameraPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+            new AlertDialog.Builder(this)
+                    .setMessage("请求权限")
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(IdCardActivity.this,
+                                    new String[]{Manifest.permission.CAMERA},
+                                    REQUEST_CAMERA_PERMISSION);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    finish();
+                                }
+                            })
+                    .create();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CAMERA_PERMISSION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CAMERA_PERMISSION) {
+            if (grantResults.length != 1 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                new AlertDialog.Builder(this)
+                        .setMessage("请求权限")
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                finish();
+                            }
+                        })
+                        .create();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 }
