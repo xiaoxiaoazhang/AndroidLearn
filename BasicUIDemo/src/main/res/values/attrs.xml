@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="Custom2SeekBar">
+        <attr name="focus_text_size" format="dimension" />
+        <attr name="focus_text_color" format="color" />
+        <attr name="text_size" format="dimension" />
+        <attr name="text_color" format="color" />
+        <attr name="focus_src" format="reference"/>
+        <attr name="src" format="reference"/>
+        <attr name="line" format="reference"/>
+        <attr name="text_move" format="dimension"/>
+    </declare-styleable>
+</resources>

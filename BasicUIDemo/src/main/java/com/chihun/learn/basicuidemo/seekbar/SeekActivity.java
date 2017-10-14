@@ -15,6 +15,8 @@ public class SeekActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     TextView mProgressText;
     TextView mTrackingText;
     CustomSeekbar customSeekBar;
+    Custom2SeekBar custom2SeekBar;
+    Custom2SeekBar custom2SeekBar2;
 
     private ArrayList<String> volume_sections = new ArrayList<String>();
 
@@ -28,7 +30,8 @@ public class SeekActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         mProgressText = (TextView) findViewById(R.id.progress);
         mTrackingText = (TextView) findViewById(R.id.tracking);
         customSeekBar = (CustomSeekbar) findViewById(R.id.myCustomSeekBar);
-
+        custom2SeekBar = (Custom2SeekBar) findViewById(R.id.myCustomSeekBar2);
+        custom2SeekBar2 = (Custom2SeekBar) findViewById(R.id.myCustomSeekBar3);
         volume_sections.add("1M");
         volume_sections.add("2M");
         volume_sections.add("3M");
@@ -39,7 +42,13 @@ public class SeekActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         volume_sections.add("8M");
         customSeekBar.initData(volume_sections);
         customSeekBar.setProgress(0);
-        customSeekBar.setResponseOnTouch(this);//activity实现了下面的接口ResponseOnTouch，每次touch会回调onTouchResponse
+//        customSeekBar.setResponseOnTouch(this);//activity实现了下面的接口ResponseOnTouch，每次touch会回调onTouchResponse
+
+        custom2SeekBar.setData(volume_sections);
+        custom2SeekBar.setResponseOnTouch(this);
+
+        custom2SeekBar2.setData(volume_sections);
+        custom2SeekBar2.setResponseOnTouch(this);
     }
 
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromTouch) {

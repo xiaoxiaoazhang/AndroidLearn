@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:seekbar="http://schemas.android.com/apk/res/com.chihun.learn.basicuidemo"
     android:id="@+id/activity_seek"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -33,4 +34,136 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="14.33dp"
         android:layout_marginRight="10.33dp" />
+
+    <RelativeLayout
+        android:id="@+id/rl_seekbar"
+        android:layout_below="@id/myCustomSeekBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/dot_big_blu"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="centerCrop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:text="10M"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+
+            <ImageView
+                android:src="@drawable/dash_blu"
+                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
+            <RelativeLayout
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/dot_small_blu"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="centerCrop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:visibility="gone"
+                    android:text="10M"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <ImageView
+                android:src="@drawable/dash_blu"
+                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
+            <RelativeLayout
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/dot_small_blu"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="centerCrop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:visibility="gone"
+                    android:text="10M"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <ImageView
+                android:src="@drawable/dash_blu"
+                android:layout_gravity="center_vertical"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                />
+            <RelativeLayout
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/dot_small_blu"
+                    android:layout_gravity="center_vertical"
+                    android:scaleType="centerCrop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:visibility="gone"
+                    android:text="10M"
+                    android:gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <com.chihun.learn.basicuidemo.seekbar.Custom2SeekBar
+        android:background="#FF0000"
+        android:layout_below="@id/rl_seekbar"
+        android:id="@+id/myCustomSeekBar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        seekbar:focus_text_size="10sp"
+        seekbar:focus_text_color="@android:color/white"
+        seekbar:text_size="10sp"
+        seekbar:text_color="#757575"
+        seekbar:text_move="20dp"
+        seekbar:focus_src="@drawable/dot_big_blu"
+        seekbar:src="@drawable/dot_small_blu"
+        seekbar:line="@drawable/dash_blu"
+        />
+
+    <com.chihun.learn.basicuidemo.seekbar.Custom2SeekBar
+        android:background="#00FF00"
+        android:layout_below="@id/myCustomSeekBar2"
+        android:id="@+id/myCustomSeekBar3"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        seekbar:focus_text_size="10sp"
+        seekbar:focus_text_color="#212121"
+        seekbar:text_size="10sp"
+        seekbar:text_color="#757575"
+        seekbar:text_move="20dp"
+        seekbar:focus_src="@drawable/dot_big_org"
+        seekbar:src="@drawable/dot_small_org"
+        seekbar:line="@drawable/dash_org"
+        />
 </RelativeLayout>
