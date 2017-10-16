@@ -51,6 +51,9 @@ public class UpdateService extends Service {
             request.setVisibleInDownloadsUi(true);
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
             request.setMimeType("application/vnd.android.package-archive");
+            request.setTitle("baidumusic.apk");
+            request.setDescription("baidumusic.apk正在下载...");
+            request.setAllowedOverRoaming(true);
             String dir = Environment.getExternalStorageDirectory().getAbsolutePath() + "/Downloads/";
             Log.i(TAG, "dir: " + dir);
             File file = new File(dir, "baidumusic.apk");

@@ -4,5 +4,10 @@
         <external-path
             name="download"
             path=""/>
+
+        <external-path
+            name="mydemo"
+            path="downloadqzxq" />
+
     </paths>
 </resources>

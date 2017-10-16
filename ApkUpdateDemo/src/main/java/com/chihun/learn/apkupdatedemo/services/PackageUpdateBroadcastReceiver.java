@@ -1,5 +1,6 @@
 package com.chihun.learn.apkupdatedemo.services;
 
+import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,8 @@ import android.util.Log;
  */
 
 public class PackageUpdateBroadcastReceiver extends BroadcastReceiver {
+    DownloadController downloadController;
+
     public PackageUpdateBroadcastReceiver() {
         super();
     }
@@ -25,7 +28,11 @@ public class PackageUpdateBroadcastReceiver extends BroadcastReceiver {
         } else if (Intent.ACTION_PACKAGE_REPLACED.equals(action)) {
             String data = intent.getDataString();
             Log.d("Receiver", "package replaced! " + data);
+        }else if (action.equals(DownloadManager.ACTION_DOWNLOAD_COMPLETE)) {
+            downloadController = DownloadController.getInstance(context);
+            downloadController.installAPK(context);
         }
+
     }
 
 }
