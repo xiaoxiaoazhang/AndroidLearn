@@ -62,12 +62,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private void onUpdate() {
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mydemo/";
-        Log.i("=====", "dir: " + dirPath);
-        File dir = new File(dirPath);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
+//        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/mydemo/";
+//        Log.i("=====", "dir: " + dirPath);
+//        File dir = new File(dirPath);
+//        if (!dir.exists()) {
+//            dir.mkdirs();
+//        }
         startService(new Intent(this, UpdateService2.class));
     }
 
