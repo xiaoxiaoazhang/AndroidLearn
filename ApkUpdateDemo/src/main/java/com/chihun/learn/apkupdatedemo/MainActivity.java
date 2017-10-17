@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.chihun.learn.apkupdatedemo.services.UpdateService;
+import com.chihun.learn.apkupdatedemo.services.UpdateService2;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClick(View view) {
         if (view.getId() == R.id.button) {
-            startService(new Intent(this, UpdateService.class));
+            startService(new Intent(this, UpdateService2.class));
 //            shareAppShop(this, "com.tencent.mm");
         }
     }

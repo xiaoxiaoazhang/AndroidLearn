@@ -37,4 +37,13 @@ public class SharePreHelper {
         editor.putLong(key, value);
         editor.commit();
     }
+    public String getString(String key, String defaultValue) {
+        return sp.getString(key, defaultValue);
+    }
+
+    public void setString(String key, String value) {
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(key, value);
+        editor.commit();
+    }
 }
