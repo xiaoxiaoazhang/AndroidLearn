@@ -67,8 +67,8 @@ public class IdCardActivity extends Activity implements View.OnClickListener {
                     requestCameraPermission();
                     return;
                 }
-                if (Build.VERSION_CODES.LOLLIPOP <= Build.VERSION.SDK_INT) {
-                    startActivityForResult(new Intent(this, Camera2Activity.class), CameraActivity.REQUEST_CODE);
+                if (Build.VERSION_CODES.M < Build.VERSION.SDK_INT) {
+//                    startActivityForResult(new Intent(this, Camera2Activity.class), CameraActivity.REQUEST_CODE);
                 } else {
                     startActivityForResult(new Intent(this, CameraActivity.class), CameraActivity.REQUEST_CODE);
                 }
@@ -80,10 +80,10 @@ public class IdCardActivity extends Activity implements View.OnClickListener {
                     requestCameraPermission();
                     return;
                 }
-                if (Build.VERSION_CODES.LOLLIPOP <= Build.VERSION.SDK_INT) {
-                    Intent intent = new Intent(this, Camera2Activity.class);
-                    intent.putExtra("EXTRA_IS_BACK", true);
-                    startActivityForResult(intent, CameraActivity.REQUEST_CODE);
+                if (Build.VERSION_CODES.M < Build.VERSION.SDK_INT) {
+//                    Intent intent = new Intent(this, Camera2Activity.class);
+//                    intent.putExtra("EXTRA_IS_BACK", true);
+//                    startActivityForResult(intent, CameraActivity.REQUEST_CODE);
                 } else {
                     Intent intent = new Intent(this, CameraActivity.class);
                     intent.putExtra("EXTRA_IS_BACK", true);

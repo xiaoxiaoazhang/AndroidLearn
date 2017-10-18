@@ -7,6 +7,7 @@ import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -30,6 +31,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
 
     private boolean isBack;
     public static final int REQUEST_CODE = 1000;
+    private Thread thread;
 
     private Handler handler = new Handler() {
         @Override
@@ -50,12 +52,23 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         initViews();
         initData();
         setOnListener();
+        Log.d(TAG,  "onCreate:"+this.hashCode());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         releaseCamera();
+        Log.d(TAG,  "onStop:"+this.hashCode());
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (thread != null) {
+            thread.interrupt();
+        }
+        super.onDestroy();
+        Log.d(TAG,  "onDestroy:"+this.hashCode());
     }
 
     private void releaseCamera() {
@@ -81,7 +94,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
 
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
         surfaceView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-        surfaceView.getHolder().setFixedSize(240, 140);	//设置Surface分辨率
+        surfaceView.getHolder().setFixedSize(1280, 720);	//设置Surface分辨率
         surfaceView.getHolder().setKeepScreenOn(true);// 屏幕常亮
         surfaceView.getHolder().addCallback(new SurfaceCallback());//为SurfaceView的句柄添加一个回调函数
     }
@@ -121,7 +134,10 @@ public class CameraActivity extends Activity implements View.OnClickListener {
      */
     public void saveToSDCard(final byte[] photoData) throws IOException {
 
-        new Thread(new Runnable() {
+        if (thread != null) {
+            thread.interrupt();
+        }
+        thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 String fileName = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + ".jpg";
@@ -135,7 +151,8 @@ public class CameraActivity extends Activity implements View.OnClickListener {
                 }
                 Message.obtain(handler, 0x1, intent).sendToTarget();
             }
-        }).start();
+        });
+        thread.start();
     }
 
 
@@ -151,7 +168,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
                 parameters.setPreviewSize(width, height); // 设置预览大小
                 parameters.setPreviewFrameRate(5);	//设置每秒显示4帧
                 parameters.setPictureSize(width, height); // 设置保存的图片尺寸
-                parameters.setJpegQuality(40); // 设置照片质量
+                parameters.setJpegQuality(100); // 设置照片质量
             }
         }
 
@@ -159,9 +176,19 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
             try {
-                camera = Camera.open(); // 打开摄像头
+                Log.d(TAG, "numbers:"+Camera.getNumberOfCameras()); 
+                if(Camera.getNumberOfCameras() == 2){ 
+                    camera  =  Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+                }else{
+                    camera  =  Camera.open();
+                }
+
+                Log.d(TAG,  "smoothZoom:"+camera.getParameters().isSmoothZoomSupported()); 
+                Log.d(TAG,  "supportzoom:"+camera.getParameters().isZoomSupported()); 
+                Log.d(TAG,  "max  zoom:"+camera.getParameters().getMaxZoom());
+//                camera.setDisplayOrientation(getPreviewDegree(CameraActivity.this));
+                camera.setDisplayOrientation(setCameraDisplayOrientation(CameraActivity.this, Camera.CameraInfo.CAMERA_FACING_BACK));
                 camera.setPreviewDisplay(holder); // 设置用于显示拍照影像的SurfaceHolder对象
-                camera.setDisplayOrientation(getPreviewDegree(CameraActivity.this));
                 camera.startPreview(); // 开始预览
             } catch (Exception e) {
                 e.printStackTrace();
@@ -215,5 +242,28 @@ public class CameraActivity extends Activity implements View.OnClickListener {
                 break;
         }
         return degree;
+    }
+
+    public static int setCameraDisplayOrientation(Activity activity, int cameraId) {
+         android.hardware.Camera.CameraInfo info =  new android.hardware.Camera.CameraInfo();
+         android.hardware.Camera.getCameraInfo(cameraId, info); 
+         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+         int degrees = 0; 
+         Log.d(TAG, "rotation:"+rotation + " info.orientation:" + info.orientation + " info.facing :" + info.facing);
+         switch (rotation) { 
+             case Surface.ROTATION_0: degrees = 0; break; 
+             case Surface.ROTATION_90: degrees = 90; break; 
+             case Surface.ROTATION_180: degrees = 180; break; 
+             case Surface.ROTATION_270: degrees = 270; break; 
+         }
+         
+         int result; 
+         if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+             result = (info.orientation + degrees) % 360;
+             result = (360 - result) % 360; // compensate the mirror
+         } else { // back-facing
+             result = (info.orientation - degrees + 360) % 360;
+         }
+         return result;
     }
 }
