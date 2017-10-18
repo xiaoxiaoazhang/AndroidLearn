@@ -1,11 +1,10 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 26
     buildToolsVersion "26.0.1"
 
     defaultConfig {
-        applicationId "com.chihun.learn.camerademo"
         minSdkVersion 15
         targetSdkVersion 26
         versionCode 1
@@ -28,6 +27,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
-    compile project(':CameraLib')
     testCompile 'junit:junit:4.12'
+    compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.3.0@aar'
 }
