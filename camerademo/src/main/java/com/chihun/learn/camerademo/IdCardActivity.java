@@ -14,7 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.jerry.sweetcamera.CameraLibActivity;
+//import com.jerry.sweetcamera.CameraLibActivity;
 
 /**
  * File description
@@ -72,7 +72,7 @@ public class IdCardActivity extends Activity implements View.OnClickListener {
                 if (Build.VERSION_CODES.M < Build.VERSION.SDK_INT) {
 //                    startActivityForResult(new Intent(this, Camera2Activity.class), CameraActivity.REQUEST_CODE);
                 } else {
-                    startActivityForResult(new Intent(this, CameraLibActivity.class), CameraActivity.REQUEST_CODE);
+                    startActivityForResult(new Intent(this, CameraActivity.class), CameraActivity.REQUEST_CODE);
                 }
                 break;
             case R.id.iv_idcard_back_camera:
@@ -87,7 +87,7 @@ public class IdCardActivity extends Activity implements View.OnClickListener {
 //                    intent.putExtra("EXTRA_IS_BACK", true);
 //                    startActivityForResult(intent, CameraActivity.REQUEST_CODE);
                 } else {
-                    Intent intent = new Intent(this, CameraLibActivity.class);
+                    Intent intent = new Intent(this, CameraActivity.class);
                     intent.putExtra("EXTRA_IS_BACK", true);
                     startActivityForResult(intent, CameraActivity.REQUEST_CODE);
                 }

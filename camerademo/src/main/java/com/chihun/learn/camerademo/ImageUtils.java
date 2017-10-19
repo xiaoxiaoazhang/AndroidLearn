@@ -82,8 +82,8 @@ public class ImageUtils {
         try {
             Log.i(TAG, "origin size: " + data.length / 1024 + "k");
             // 尺寸压缩
-//            byte[] compress1 = getSmallBitmap(data, 480, 280);
-//            Log.i(TAG, "compress1 size: " + compress1.length / 1024 + "k");
+            byte[] compress1 = getSmallBitmap(data, 640, 360);
+            Log.i(TAG, "compress1 size: " + compress1.length / 1024 + "k");
             // 质量压缩
             byte[] compress2 = compressBitmap(data, size);
             Log.i(TAG, "compress2 size: " + compress2.length / 1024 + "k");

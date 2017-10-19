@@ -48,7 +48,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lib_camera);
+        setContentView(R.layout.activity_camera);
         initViews();
         initData();
         setOnListener();
@@ -168,7 +168,7 @@ public class CameraActivity extends Activity implements View.OnClickListener {
                 parameters.setPreviewSize(width, height); // 设置预览大小
                 parameters.setPreviewFrameRate(5);	//设置每秒显示4帧
                 parameters.setPictureSize(width, height); // 设置保存的图片尺寸
-                parameters.setJpegQuality(100); // 设置照片质量
+                parameters.setJpegQuality(40); // 设置照片质量
             }
         }
 
@@ -177,17 +177,17 @@ public class CameraActivity extends Activity implements View.OnClickListener {
         public void surfaceCreated(SurfaceHolder holder) {
             try {
                 Log.d(TAG, "numbers:"+Camera.getNumberOfCameras()); 
-                if(Camera.getNumberOfCameras() == 2){ 
-                    camera  =  Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
-                }else{
+//                if(Camera.getNumberOfCameras() == 2){
+//                    camera  =  Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+//                }else{
                     camera  =  Camera.open();
-                }
+//                }
 
-                Log.d(TAG,  "smoothZoom:"+camera.getParameters().isSmoothZoomSupported()); 
-                Log.d(TAG,  "supportzoom:"+camera.getParameters().isZoomSupported()); 
-                Log.d(TAG,  "max  zoom:"+camera.getParameters().getMaxZoom());
-//                camera.setDisplayOrientation(getPreviewDegree(CameraActivity.this));
-                camera.setDisplayOrientation(setCameraDisplayOrientation(CameraActivity.this, Camera.CameraInfo.CAMERA_FACING_BACK));
+//                Log.d(TAG,  "smoothZoom:"+camera.getParameters().isSmoothZoomSupported());
+//                Log.d(TAG,  "supportzoom:"+camera.getParameters().isZoomSupported());
+//                Log.d(TAG,  "max  zoom:"+camera.getParameters().getMaxZoom());
+                camera.setDisplayOrientation(getPreviewDegree(CameraActivity.this));
+//                camera.setDisplayOrientation(setCameraDisplayOrientation(CameraActivity.this, Camera.CameraInfo.CAMERA_FACING_BACK));
                 camera.setPreviewDisplay(holder); // 设置用于显示拍照影像的SurfaceHolder对象
                 camera.startPreview(); // 开始预览
             } catch (Exception e) {
