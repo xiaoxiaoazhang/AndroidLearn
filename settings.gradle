@@ -1,5 +1,6 @@
+include ':servicedemo'
 //include ':LanguageDemo'
 //include ':RetrofitDemo'
 //include ':BasicUIDemo'
 //include ':ApkUpdateDemo'
-include ':camerademo', ':CameraLib'
+//include ':camerademo', ':CameraLib'
