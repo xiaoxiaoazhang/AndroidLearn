@@ -53,5 +53,15 @@ public class MyRemoteService extends Service {
                 listener.onResult(result);
             }
         }
+
+        @Override
+        public void onStart2(String param, IResultListener listener) throws RemoteException {
+
+        }
+
+        @Override
+        public void onStart3(byte[] param, IResultListener listener) throws RemoteException {
+
+        }
     }
 }
