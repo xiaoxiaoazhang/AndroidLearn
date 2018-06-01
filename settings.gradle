@@ -1,4 +1,4 @@
-include ':servicedemo'
+include ':servicedemo', ':providerdemo'
 //include ':LanguageDemo'
 //include ':RetrofitDemo'
 //include ':BasicUIDemo'
