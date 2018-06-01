@@ -3,12 +3,14 @@ package com.chihun.learn.providerdemo;
 import android.content.ContentValues;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.chihun.learn.providerdemo.db.DBHelper;
 import com.chihun.learn.providerdemo.provider.MyContentProvider;
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-                    queryPerson();
+                    queryPerson(MyContentProvider.PERSON_URI);
                     break;
                 case 2:
                     queryAddress();
@@ -49,6 +51,33 @@ public class MainActivity extends AppCompatActivity {
             mHandler.sendEmptyMessage(2);
         }
     };
+    private int personId = 0;
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.insert:
+                personId++;
+                ContentValues values = new ContentValues();
+                values.put(DBHelper.Column.COLUMN_ID, personId);
+                values.put(DBHelper.Column.COLUMN_NAME, String.valueOf(personId));
+                getContentResolver().insert(MyContentProvider.PERSON_URI, values);
+                break;
+            case R.id.delete:
+                getContentResolver().delete(MyContentProvider.PERSON_URI, DBHelper.Column.COLUMN_ID + "=?",new String[]{String.valueOf(personId)});
+                break;
+            case R.id.update:
+
+                break;
+            case R.id.query:
+                Uri uri = MyContentProvider.PERSON_URI;
+                uri.toString();
+                queryPerson(uri);
+                break;
+            case R.id.reset:
+                personId = 0;
+                mDBHelper.deleteAll(DBHelper.Column.TABLE_NAME);
+                break;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,36 +101,29 @@ public class MainActivity extends AppCompatActivity {
          * 在insert方法里面再进行数据库操作．
          * 插入成功的话，再调用notifyChange方法通知观察者
          */
-        new Thread() {
-            @Override
-            public void run() {
-                int i = 5;
-                mDBHelper.deleteAll(DBHelper.Column.TABLE_NAME);
-                mDBHelper.deleteAll(DBHelper.Column.TABLE_NAME2);
-                while (i > 0)
-                {
-                    ContentValues values = new ContentValues();
-                    values.put(DBHelper.Column.COLUMN_ID, i);
-                    values.put(DBHelper.Column.COLUMN_NAME, i + "");
-                    getContentResolver().insert(MyContentProvider.PERSON_URI, values);
-
-                    ContentValues address = new ContentValues();
-                    address.put(DBHelper.Column.COLUMN_ID, i);
-                    address.put(DBHelper.Column.COLUMN_ADDRESS, i + "_");
-                    getContentResolver().insert(MyContentProvider.ADDRESS_URI, address);
-                    try {
-                        sleep(5000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    i--;
-                }
-            }
-        }.start();
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                int i = 5;
+//                mDBHelper.deleteAll(DBHelper.Column.TABLE_NAME2);
+//                while (i > 0) {
+//                    ContentValues address = new ContentValues();
+//                    address.put(DBHelper.Column.COLUMN_ID, i);
+//                    address.put(DBHelper.Column.COLUMN_ADDRESS, i + "_");
+//                    getContentResolver().insert(MyContentProvider.ADDRESS_URI, address);
+//                    try {
+//                        sleep(5000);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//                    i--;
+//                }
+//            }
+//        }.start();
     }
 
-    private void queryPerson() {
-        Cursor cursor = getContentResolver().query(MyContentProvider.PERSON_URI, null, null, null, null);
+    private void queryPerson(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
         if (cursor != null) {
             StringBuilder stringBuilder = new StringBuilder();
             int count = cursor.getColumnCount();

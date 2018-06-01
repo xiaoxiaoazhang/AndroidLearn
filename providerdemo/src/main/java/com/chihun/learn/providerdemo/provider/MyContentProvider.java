@@ -23,7 +23,8 @@ public class MyContentProvider extends ContentProvider {
     private static final UriMatcher mUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     // 查询指定ID的一条数据
-    public static final Uri PERSON_URI = Uri.parse("content://" + AUTHORITIES + "/" + PATH_PERSON + "/" + TABLE_PERSON_DIR);
+//    public static final Uri PERSON_URI = Uri.parse("content://" + AUTHORITIES + "/" + PATH_PERSON + "/" + TABLE_PERSON_DIR);
+    public static final Uri PERSON_URI = Uri.parse("content://" + AUTHORITIES + "/" + PATH_PERSON);
     // 查询指定表数据
     public static final Uri ADDRESS_URI = Uri.parse("content://" + AUTHORITIES + "/" + PATH_ADDRESS);
 
@@ -140,11 +141,14 @@ public class MyContentProvider extends ContentProvider {
         switch (mUriMatcher.match(uri)) {
             case TABLE_PERSON_DIR:
                 deletedRows = db.delete(DBHelper.Column.TABLE_NAME, selection, selectionArgs);
+
+                getContext().getContentResolver().notifyChange(Uri.parse("content://" + AUTHORITIES + "/" + DBHelper.Column.TABLE_NAME),null);
                 break;
 
             case TABLE_PERSON_ITEM:
                 String id = uri.getPathSegments().get(1);
                 deletedRows = db.delete(DBHelper.Column.TABLE_NAME, "_id = ?", new String[]{id});
+                getContext().getContentResolver().notifyChange(Uri.parse("content://" + AUTHORITIES + "/" + DBHelper.Column.TABLE_NAME + "/" + deletedRows),null);
                 break;
 
             case TABLE_ADDRESS_DIR:

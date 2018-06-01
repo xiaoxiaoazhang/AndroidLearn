@@ -49,14 +49,16 @@ public class DBHelper {
      * @param values
      * @return
      */
-    public long insert(ContentValues values, String tableName)
-    {
+    public long insert(ContentValues values, String tableName) {
         return mWriteDb.insert(tableName,null,values);
     }
 
-    public void deleteAll(String tableName)
-    {
+    public void deleteAll(String tableName) {
         mWriteDb.delete(tableName,null,null);
+    }
+
+    public void delete(String tableName, int id) {
+        mWriteDb.delete(tableName,Column.COLUMN_ID + "=?",new String[]{String.valueOf(id)});
     }
 
     private class MyDatabaseHelper extends SQLiteOpenHelper {
