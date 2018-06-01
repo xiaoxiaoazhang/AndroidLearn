@@ -69,7 +69,11 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.query:
                 Uri uri = MyContentProvider.PERSON_URI;
-                uri.toString();
+                Log.d("URI", " Authority: " + uri.getAuthority() + " | path: " + uri.getPath() + " | host: " + uri.getHost() + " | port: " + uri.getPort() + " | Scheme: " + uri.getScheme() + " | fragment: " + uri.getFragment());
+//                Authority: com.chihun.provider | path: /person | host: com.chihun.provider | port: -1 | Scheme: content
+                // 查询指定id信息
+                uri = Uri.parse("content://" + uri.getAuthority() + "" + uri.getPath() + "/" + personId);
+                Log.d("URI", " Authority: " + uri.getAuthority() + " | path: " + uri.getPath() + " | host: " + uri.getHost() + " | port: " + uri.getPort() + " | Scheme: " + uri.getScheme() + " | fragment: " + uri.getFragment());
                 queryPerson(uri);
                 break;
             case R.id.reset:
