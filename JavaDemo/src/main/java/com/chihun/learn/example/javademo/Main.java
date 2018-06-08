@@ -9,20 +9,23 @@ public class Main {
 
         System.out.println("flag=" + Integer.toHexString(flag));
 
-        flag += 0x11;
+        flag |= 0x11;
+        flag &= 0x0F;
+        System.out.println("flag=" + Integer.toHexString(flag));
+
+        flag |= 0x20;
 
         System.out.println("flag=" + Integer.toHexString(flag));
 
-        flag &= 0;
+        flag |= 0x22;
 
         System.out.println("flag=" + Integer.toHexString(flag));
 
-        flag &= 0x11;
+        flag |= 0x11;
 
         System.out.println("flag=" + Integer.toHexString(flag));
 
-        flag += 0x11;
-
+        flag &= 0xF0;
         System.out.println("flag=" + Integer.toHexString(flag));
     }
 }
