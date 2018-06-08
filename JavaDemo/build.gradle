@@ -1,0 +1,37 @@
+group 'com.chihun.learn.example.javademo'
+version '1.0.0'
+apply plugin: 'java'
+apply plugin: 'application'
+mainClassName = 'com.chihun.learn.example.javademo.Main'
+run.args = ['']
+archivesBaseName = 'haha' // 自定义jar文件名
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+sourceCompatibility = "1.7"
+targetCompatibility = "1.7"
+
+// 编译
+// gradlew :JavaDemo:compileJava
+// 打jar包
+// gradlew :JavaDemo:build
+// 运行
+// java -cp build/libs/JavaDemo.jar com.chihun.learn.example.javademo.Main
+
+// 配置application后
+// gradlew -q run
+
+// 打包成zip或tar文件并包含和系统相关的启动脚本。任务是distZip或distTar，可以打包成一个可以执行的应用：
+// gradle distZip
+
+// 配置启动参数
+// 更改build.gradle文件
+// run.args = [project.runArgs]
+//用下面的命令传入参数：
+// gradle -q run -PrunArgs='xxxx'
