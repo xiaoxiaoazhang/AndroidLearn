@@ -1,7 +1,10 @@
 include ':JavaDemo'
 //include ':servicedemo', ':providerdemo'
 //include ':LanguageDemo'
-include ':RetrofitDemo'
+//include ':RetrofitDemo'
 //include ':BasicUIDemo'
 //include ':ApkUpdateDemo'
 //include ':camerademo', ':CameraLib'
+
+include ':jnidemo'
+project(':jnidemo').projectDir = new File('jnidemo')

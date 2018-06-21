@@ -1,0 +1,61 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
+
+
+    defaultConfig {
+        applicationId "com.chihun.learn.jnidemo"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        ndk {
+//            moduleName "JNI_FIRST_DEMO"
+//            ldLibs "log","z","m"
+            abiFilters "armeabi","armeabi-v7a"
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+//            jni.srcDirs = ['jni']
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:27.1.1'
+    compile 'com.android.support.constraint:constraint-layout:1.1.2'
+    testCompile 'junit:junit:4.12'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+}
+
+// 命令行编译
+//task ndkBuild(type: Exec, description: 'Compile JNI source via NDK') {
+//    commandLine 'F:\\Android\\sdk\\ndk-bundle\\ndk-build.cmd', //这里本地ndk的路径
+//            'NDK_PROJECT_PATH=build/intermediates/ndk',
+//            'NDK_LIBS_OUT=src/main/jniLibs',
+//            'APP_BUILD_SCRIPT=src/main/jni/Android.mk',
+//            'NDK_APPLICATION_MK=src/main/jni/Application.mk'
+//}
+//tasks.withType(JavaCompile){
+//    compileTask->compileTask.dependsOn ndkBuild
+//}
