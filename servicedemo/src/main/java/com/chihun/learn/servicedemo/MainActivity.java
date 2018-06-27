@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -81,26 +82,47 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    private IResultListener resultListener = new IResultListener() {
+    private IResultListener resultListener = new IResultListener.Stub() {
         @Override
         public void onResult(Result result) throws RemoteException {
             Log.d("MainActivity", "result: " + result.getCode() + " " + result.getMessage());
         }
+    };
+    private IServiceControl serviceControl;
+    private IBinder.DeathRecipient mDeathRecipient = new IBinder.DeathRecipient() {
 
         @Override
-        public IBinder asBinder() {
-            return null;
+        public void binderDied() {
+            Log.d("MainActivity", "binderDied is called! service is died!");
+            if (serviceControl == null) {
+                return;
+            }
+            serviceControl.asBinder().unlinkToDeath(mDeathRecipient, 0);
+            serviceControl = null;
+            // TODO:重新绑定远程服务
+            bindService(new Intent(MainActivity.this, MyRemoteService.class), remoteServiceConnection, BIND_AUTO_CREATE);
         }
     };
 
+
+   // 服务端异常退出会有 pingBinder——> binderDied——>onServiceDisconnected——>RemoteException的顺序执行，可以通过监听上述的方法监听服务端是否停止服务
     private class RemoteServiceConnection implements ServiceConnection {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             IServiceControl serviceControl = IServiceControl.Stub.asInterface(service);
             HashMap<String, String> param = new HashMap<>();
+            param.put("pkgName", getPackageName());
             param.put("action", "success");
             try {
-                serviceControl.onStart(param, resultListener);
+                if (service.pingBinder()) {
+                    Log.d("MainActivity", "服务端连接成功");
+                } else {
+                    Log.d("MainActivity", "服务端连接失败");
+                }
+                // 监听服务端是否异常断开，
+                service.linkToDeath(mDeathRecipient, 0);
+
+                serviceControl.onStart(param, resultListener, new Binder());
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
@@ -108,7 +130,9 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
+            // 当service端异常时会调用，正常结束不会调用
+            // TODO:重新绑定远程服务
+//            bindService(new Intent(MainActivity.this, MyRemoteService.class), remoteServiceConnection, BIND_AUTO_CREATE);
         }
     }
     private Handler handler = new Handler() {

@@ -15,4 +15,14 @@ public interface ImageService {
     @Streaming //大文件时要加不然会OOM
     @GET
     Call<ResponseBody> downloadImage(@retrofit2.http.Url String imageUrl);
+
+//    @Headers("Connection:close")
+//    @Multipart
+//    @POST(Url.FACE_DETECT)
+//    Call<DetectResponse> detect(@PartMap Map<String, RequestBody> imageMap, @Query("accessToken") String accessToken);
+//
+//    @Headers("Connection:close")
+//    @Multipart
+//    @POST(Url.FACE_DETECT)
+//    Call<DetectResponse> detect(@Part("image\"; filename=\"image.jpg\"") RequestBody image, @Query("accessToken") String accessToken);
 }

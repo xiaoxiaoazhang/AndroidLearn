@@ -24,4 +24,16 @@ public class NetworkRequest {
     public static void downloadImage(String imageUrl, Callback<ResponseBody> callback) {
         Network.imageService().downloadImage(imageUrl).enqueue(callback);
     }
+
+//    public static void detect(String accessToken, byte[] image, Callback<DetectResponse> callback) {
+//        Map<String, RequestBody> imageMap = new HashMap<>(1);
+//        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), image);
+//        imageMap.put("image\";filename=\"image_"+ System.currentTimeMillis() +".jpg\"", requestBody);
+//        Network.imageService().detect(imageMap, accessToken).enqueue(callback);
+//    }
+//
+//    public static void detect(String accessToken, byte[] image, Callback<DetectResponse> callback) {
+//        RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), image);
+//        Network.recognitionServer().detect(requestBody, accessToken).enqueue(callback);
+//    }
 }
