@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -21,13 +22,23 @@ import com.chihun.learn.retrofitdemo.network.FileUtil;
 import com.chihun.learn.retrofitdemo.network.ImageResponse;
 import com.chihun.learn.retrofitdemo.network.LoadListener;
 import com.chihun.learn.retrofitdemo.network.NetworkRequest;
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,11 +66,79 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.imageView)
     ImageView imageView;
 
+    private final List<String> urls = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        // Ensure we get a different ordering of images on each run.
+        Collections.addAll(urls, Data.URLS);
+        Collections.shuffle(urls);
+
+        // Triple up the list.
+        ArrayList<String> copy = new ArrayList<>(urls);
+        urls.addAll(copy);
+        urls.addAll(copy);
+
+        customCache();
+
+        Log.d("MainActivity", "cpuCores: " + getNumCores() + " | AvailableCores: " + getNumAvailableCores());
+    }
+
+    public static int getNumAvailableCores() {
+        return  Runtime.getRuntime().availableProcessors();
+    }
+
+    private int getNumCores()
+    {
+        // Private Class to display only CPU devices in the directory listing
+        class CpuFilter implements FileFilter
+        {
+            @Override
+            public boolean accept(File pathname)
+            {
+                // Check if filename is "cpu", followed by a single digit number
+                if (Pattern.matches("cpu[0-9]", pathname.getName()))
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        try
+        {
+            // Get directory containing CPU info
+            File dir = new File("/sys/devices/system/cpu/");
+            // Filter to only list the devices we care about
+            File[] files = dir.listFiles(new CpuFilter());
+            // Return the number of cores (virtual CPU devices)
+            return files.length;
+        } catch (Exception e)
+        {
+            // Default to return 1 core
+            return 1;
+        }
+    }
+
+    private void customCache() {
+        File file = new File(FileUtil.getFaceDir());
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+
+        long maxSize = Runtime.getRuntime().maxMemory() / 8;//设置图片缓存大小为运行时缓存的八分之一
+        OkHttpClient client = new OkHttpClient.Builder()
+                .cache(new Cache(file, maxSize))
+                .build();
+
+        Picasso picasso = new Picasso.Builder(this)
+                .downloader(new OkHttp3Downloader(client))//注意此处替换为 OkHttp3Downloader
+                .build();
+        Picasso.setSingletonInstance(picasso);
     }
 
     public void onClick(View view) {
@@ -72,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.downImageBtn2:
 //                downImage2();
+                downloadImage3();
                 break;
         }
     }
@@ -134,6 +214,47 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private ExecutorService executorService = Executors.newFixedThreadPool(4);
+
+    private void downloadImage3() {
+//        String url = et_url.getText().toString();
+//        if (TextUtils.isEmpty(url)) {
+//            url = "http://pic.sc.chinaz.com/files/pic/pic9/201508/apic14052.jpg";
+//        }
+        //Picasso下载
+        for (int i = 0; i < urls.size(); i++) {
+            Picasso.with(this).load(urls.get(i)).into(new com.squareup.picasso.Target() {
+
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                    String imageName = System.currentTimeMillis() + ".png";
+//
+//                    File dcimFile = FileUtil.getDCIMFile(FileUtil.PATH_PHOTOGRAPH,imageName);
+//
+//                    Log.i("MainActivity","bitmap="+bitmap);
+//                    FileOutputStream ostream = null;
+//                    try {
+//                        ostream = new FileOutputStream(dcimFile);
+//                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, ostream);
+//                        ostream.close();
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                    Toast.makeText(MainActivity.this,"图片下载至:"+dcimFile, Toast.LENGTH_SHORT).show();
+                    Log.d("MainActivity", "onBitmapLoaded called! ");
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+                    Log.d("MainActivity", "onBitmapLoaded called!");
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+                    Log.d("MainActivity", "onBitmapLoaded called!");
+                }
+            });
+        }
+    }
 
 //    private void downImage2() {
 //        String url = et_url.getText().toString();
