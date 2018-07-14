@@ -28,6 +28,8 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileOutputStream;
+import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -157,13 +159,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void getImage() {
-        String col = et_col.getText().toString();
-        String tag = et_tag.getText().toString();
-        String sort = et_sort.getText().toString();
-        String pn = et_pn.getText().toString();
-        String rn = et_rn.getText().toString();
-        String p = et_p.getText().toString();
-        String form = et_form.getText().toString();
+        final String col = et_col.getText().toString();
+        final String tag = et_tag.getText().toString();
+        final String sort = et_sort.getText().toString();
+        final String pn = et_pn.getText().toString();
+        final String rn = et_rn.getText().toString();
+        final String p = et_p.getText().toString();
+        final String form = et_form.getText().toString();
         NetworkRequest.getImage(col, tag, Integer.parseInt(sort), Integer.parseInt(pn), Integer.parseInt(rn), p, Integer.parseInt(form), new Subscriber<ImageResponse>() {
             @Override
             public void onCompleted() {
@@ -180,6 +182,37 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        NetworkRequest.getImageAsync(col, tag, Integer.parseInt(sort), Integer.parseInt(pn), Integer.parseInt(rn), p, Integer.parseInt(form), new retrofit2.Callback<ImageResponse>() {
+
+            @Override
+            public void onResponse(Call<ImageResponse> call, Response<ImageResponse> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<ImageResponse> call, Throwable t) {
+                if(t instanceof SocketTimeoutException){//判断超时异常
+
+                }
+                if(t instanceof ConnectException){//判断连接异常，我这里是报Failed to connect to 10.7.5.144
+
+                }
+            }
+        });
+
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                ImageResponse imageResponse = NetworkRequest.getImageSync(col, tag, Integer.parseInt(sort), Integer.parseInt(pn), Integer.parseInt(rn), p, Integer.parseInt(form));
+                if (null != imageResponse) {
+
+                } else {
+
+                }
+            }
+        });
+
     }
 
     private void downImage() {
