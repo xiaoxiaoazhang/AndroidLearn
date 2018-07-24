@@ -6,6 +6,8 @@
 
 package com.chihun.learn.retrofitdemo.network;
 
+import android.util.Log;
+
 import com.chihun.learn.retrofitdemo.MyApp;
 import com.chihun.learn.retrofitdemo.network.interceptor.CacheInterceptor;
 import com.chihun.learn.retrofitdemo.network.interceptor.CacheInterceptor2;
@@ -15,10 +17,20 @@ import com.chihun.learn.retrofitdemo.network.interceptor.DynTimeoutInterceptor;
 import com.chihun.learn.retrofitdemo.network.interceptor.LogInterceptor;
 import com.chihun.learn.retrofitdemo.network.interceptor.RetryInterceptor;
 
+import java.io.InputStream;
+import java.security.cert.CertificateException;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
+import okhttp3.internal.tls.OkHostnameVerifier;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.CallAdapter;
 import retrofit2.Converter;
@@ -76,7 +88,60 @@ public class Network {
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+        onHttps(okHttpClientBuilder);
         OkHttpClient okHttpClient = okHttpClientBuilder.build();
         return okHttpClient;
+    }
+
+    public static SSLSocketFactory getSSLSocketFactory() throws Exception {
+        //创建一个不验证证书链的证书信任管理器。
+        final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+            @Override
+            public void checkClientTrusted(
+                    java.security.cert.X509Certificate[] chain,
+                    String authType) throws CertificateException {
+            }
+
+            @Override
+            public void checkServerTrusted(
+                    java.security.cert.X509Certificate[] chain,
+                    String authType) throws CertificateException {
+            }
+
+            @Override
+            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                return new java.security.cert.X509Certificate[0];
+            }
+        }};
+
+        // Install the all-trusting trust manager
+        final SSLContext sslContext = SSLContext.getInstance("TLS");
+        sslContext.init(null, trustAllCerts,
+                new java.security.SecureRandom());
+        // Create an ssl socket factory with our all-trusting manager
+        return sslContext.getSocketFactory();
+    }
+
+
+    //使用自定义SSLSocketFactory
+    private static void onHttps(OkHttpClient.Builder builder) {
+        try {
+//            builder.sslSocketFactory(getSSLSocketFactory()).hostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+            HttpsManager.SSLParams sslParams = HttpsManager.getSslSocketFactory(null, null, null);
+            builder.sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
+                    .hostnameVerifier(OkHostnameVerifier.INSTANCE);
+            //      .hostnameVerifier(org.apache.http.conn.ssl.SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+//                  .hostnameVerifier(new HostnameVerifier() {
+//                        @Override
+//                        public boolean verify(String hostname, SSLSession session) {
+//                            Log.d("Network", "hostname: " + hostname);
+//        //                    return hostname.startsWith("chihun.com");
+//                            return true;
+//                        }
+//            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
