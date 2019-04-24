@@ -14,6 +14,24 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
+applicationDistribution.with {
+    into('') {
+        from '../'
+        include 'README.md'
+        include 'NOTICE'
+        include 'LICENSE'
+    }
+}
+
+jar {
+    manifest {
+        attributes(
+                "Main-Class": mainClassName,
+                "Class-Path": configurations.compile.collect { it.getName() }.join(' ')
+        )
+    }
+}
+
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
 

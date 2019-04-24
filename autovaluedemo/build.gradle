@@ -1,0 +1,50 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
+
+
+    defaultConfig {
+        applicationId "com.chihun.learn.autovaluedemo"
+        minSdkVersion 21
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dependencies {
+        compile fileTree(dir: 'libs', include: ['*.jar'])
+        compile 'com.android.support:appcompat-v7:25.3.1'
+        compile 'com.android.support.constraint:constraint-layout:1.1.3'
+        testCompile 'junit:junit:4.12'
+        androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.2', {
+            exclude group: 'com.android.support', module: 'support-annotations'
+        })
+
+        // https://github.com/rharter/auto-value-parcel
+        compile 'com.ryanharter.auto.value:auto-value-parcel-adapter:0.2.6'
+        annotationProcessor 'com.ryanharter.auto.value:auto-value-parcel:0.2.6'
+        // https://github.com/google/auto
+        // https://github.com/google/auto/blob/master/value/userguide/index.md
+        compile "com.google.auto.value:auto-value-annotations:1.6.2"
+        annotationProcessor "com.google.auto.value:auto-value:1.6.2"
+        // 可以配合android studio插件RoboPOJOGenerator（https://github.com/robohorse/RoboPOJOGenerator）
+        // 和AutoValue plugin（https://github.com/afcastano/AutoValuePlugin）加快效率
+        // https://github.com/google/gson
+        implementation 'com.google.code.gson:gson:2.8.5'
+        implementation 'com.android.support:support-annotations:25.3.1'
+        implementation 'javax.annotation:javax.annotation-api:1.2'
+    }
+}
+

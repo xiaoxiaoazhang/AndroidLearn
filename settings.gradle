@@ -1,11 +1,12 @@
-include ':JavaDemo', ':databasedemo'
+include ':JavaDemo', ':jsondemo', ':autovaluedemo'
+//include ':databasedemo'
 //include ':servicedemo'
 //include ':providerdemo'
 //include ':LanguageDemo'
-include ':RetrofitDemo'
+//include ':RetrofitDemo'
 //include ':BasicUIDemo'
 //include ':ApkUpdateDemo'
 //include ':camerademo', ':CameraLib'
 
-include ':jnidemo'
-project(':jnidemo').projectDir = new File('jnidemo')
+//include ':jnidemo'
+//project(':jnidemo').projectDir = new File('jnidemo')
