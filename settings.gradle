@@ -1,4 +1,4 @@
-include ':JavaDemo', ':jsondemo', ':autovaluedemo'
+//include ':JavaDemo', ':jsondemo', ':autovaluedemo', ':audiorecorddemo', ':grpcdemo'
 //include ':databasedemo'
 //include ':servicedemo'
 //include ':providerdemo'
@@ -8,5 +8,5 @@ include ':JavaDemo', ':jsondemo', ':autovaluedemo'
 //include ':ApkUpdateDemo'
 //include ':camerademo', ':CameraLib'
 
-//include ':jnidemo'
-//project(':jnidemo').projectDir = new File('jnidemo')
+include ':jnidemo'
+project(':jnidemo').projectDir = new File('jnidemo')
