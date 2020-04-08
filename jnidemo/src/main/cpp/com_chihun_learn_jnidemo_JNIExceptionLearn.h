@@ -15,6 +15,10 @@ extern "C" {
 JNIEXPORT void JNICALL Java_com_chihun_learn_jnidemo_JNIExceptionLearn_action
   (JNIEnv *, jclass, jstring);
 
+
+JNIEXPORT jint JNICALL Java_com_chihun_learn_jnidemo_JNIExceptionLearn_jniDivide
+     (JNIEnv *, jobject, jint, jint);
+
 #ifdef __cplusplus
 }
 #endif
