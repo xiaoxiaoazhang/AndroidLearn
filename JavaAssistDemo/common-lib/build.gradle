@@ -1,0 +1,36 @@
+apply plugin: 'java-library'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
+
+[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+}
+
+task buildCruzrSdk(type: Copy, dependsOn: [build]) {
+    group = "cruzr"
+    from('build/libs') {
+        include '*.jar'
+        exclude '*javadoc.jar'
+        exclude '*-sources.jar'
+    }
+    into(rootProject.file("buildSdk/android"))
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"
+
+//打包到本地Maven仓库
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            pom.groupId = 'com.ubtechinc.cruzr'
+            pom.artifactId = 'common'
+            pom.version = 1.0
+            // maven本地仓库的目录
+            repository(url: uri('../localMaven'))
+        }
+    }
+}

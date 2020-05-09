@@ -1,0 +1,56 @@
+buildscript {
+    repositories {
+        // maven插件目录
+        maven{
+            url uri('../localMaven')
+        }
+        jcenter()
+        google()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.6.2'
+        // 使用自定义插件
+        classpath 'com.ubtechinc.cruzr:fixjarplugin:1.0'
+    }
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'cruzr.plugin.fixjar'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+    defaultConfig {
+        applicationId "com.ubtechinc.cruzr.javaassistdemo"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
+
+cruzrExtension {
+    info 'app info .....'
+    oldApk "${project.rootProject.getRootDir().path}/output/CruzrTemperature_Korean_release_v1.5.3.apk"
+}

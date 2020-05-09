@@ -1,0 +1,4 @@
+rootProject.name='JavaAssistDemo'
+include ':app'
+include ':fix-jar-plugin'
+include ':common-lib'
