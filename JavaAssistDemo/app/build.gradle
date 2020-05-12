@@ -8,7 +8,9 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.6.2'
+//        classpath 'com.android.tools.build:gradle:3.6.2'
+//        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.4.1'
         // 使用自定义插件
         classpath 'com.ubtechinc.cruzr:fixjarplugin:1.0'
     }
@@ -50,7 +52,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
 
-cruzrExtension {
-    info 'app info .....'
-    oldApk "${project.rootProject.getRootDir().path}/output/CruzrTemperature_Korean_release_v1.5.3.apk"
-}
+//cruzrExtension {
+//    info 'app info .....'
+//    oldApk "${project.rootProject.getRootDir().path}/output/CruzrTemperature_Korean_release_v1.5.3.apk"
+//}

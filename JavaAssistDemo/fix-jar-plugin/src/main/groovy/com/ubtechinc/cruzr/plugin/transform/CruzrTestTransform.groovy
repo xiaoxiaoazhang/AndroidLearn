@@ -1,5 +1,6 @@
 package com.ubtechinc.cruzr.plugin.transform
 
+import com.android.build.api.transform.Format
 import com.android.build.api.transform.Context
 import com.android.build.api.transform.DirectoryInput
 import com.android.build.api.transform.JarInput
@@ -8,9 +9,14 @@ import com.android.build.api.transform.Transform
 import com.android.build.api.transform.TransformException
 import com.android.build.api.transform.TransformInput
 import com.android.build.api.transform.TransformOutputProvider
+import com.android.build.gradle.internal.pipeline.TransformManager
+import org.gradle.api.GradleException
 import org.gradle.api.Project
 
 import org.apache.commons.io.FileUtils
+import org.apache.commons.codec.digest.DigestUtils
+
+import java.util.regex.Pattern
 
 public class CruzrTestTransform extends Transform {
 
@@ -51,8 +57,22 @@ public class CruzrTestTransform extends Transform {
                    TransformOutputProvider outputProvider, boolean isIncremental)
             throws IOException, TransformException, InterruptedException {
         project.logger.error("transform called2")
+        File rootLocation = null
+        try {
+            rootLocation = outputProvider.rootLocation
+        } catch (Throwable e) {
+            //android gradle plugin 3.0.0+ 修改了私有变量，将其移动到了IntermediateFolderUtils中去
+            rootLocation = outputProvider.folderUtils.getRootFolder()
+        }
+        if (rootLocation == null) {
+            throw new GradleException("can't get transform root location")
+        }
+        println ">>> rootLocation: ${rootLocation}"
+        // Compatible with path separators for window and Linux, and fit split param based on 'Pattern.quote'
+        def variantDir = rootLocation.absolutePath.split(getName() + Pattern.quote(File.separator))[1]
+        println ">>> variantDir: ${variantDir}"
         // Transform的inputs有两种类型，一种是目录，一种是jar包，要分开遍历
-        inputs.each {TransformInput input ->
+        inputs.each { TransformInput input ->
             //对类型为“文件夹”的input进行遍历
             input.directoryInputs.each { DirectoryInput directoryInput->
                 project.logger.error("directoryInput -> ${directoryInput.file.absolutePath}")

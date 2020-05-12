@@ -1,4 +1,4 @@
-package com.ubtechinc.cruzr.plugin.util;
+package com.ubtechinc.cruzr.plugin.util
 
 import javassist.ClassPool
 import javassist.CtClass

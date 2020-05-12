@@ -3,6 +3,7 @@ package com.ubtechinc.cruzr.plugin
 import com.ubtechinc.cruzr.plugin.extension.CruzrExtension
 import com.ubtechinc.cruzr.plugin.task.CruzrManifestTask
 import com.ubtechinc.cruzr.plugin.task.CruzrTask
+import com.ubtechinc.cruzr.plugin.transform.CruzrFixJarTransform
 import com.ubtechinc.cruzr.plugin.transform.CruzrTestTransform
 import com.ubtechinc.cruzr.plugin.transform.CruzrTransform
 import com.ubtechinc.cruzr.plugin.util.FileOperation
@@ -20,6 +21,10 @@ class FixJarPlugin implements Plugin<Project> {
 
     @Override
     void apply(Project project) {
+        action2(project)
+    }
+
+    void action(Project project) {
         mProject = project;
         //osdetector change its plugin name in 1.4.0
         try {
@@ -95,33 +100,26 @@ class FixJarPlugin implements Plugin<Project> {
                     CruzrTransform.inject(mProject, variant)
                 }
             }
+        }
+    }
 
-            System.out.println("===================================")
-            System.out.println("this is second gradle plugin")
-            System.out.println("===================================")
-            def isApp = project.plugins.hasPlugin(AppPlugin)
-            def isLib = project.plugins.hasPlugin(LibraryPlugin)
-            // 仅处理application合包
-            if (isApp) {
-//                def android2 = project.extensions.getByType(AppExtension)
-                def android2 = project.extensions.findByType(AppExtension)
-                android2.registerTransform(new CruzrTestTransform(project))
-
-//                android.applicationVariants.all { variant ->
-//                    def variantData = variant.variantData
-//                    def scope = variantData.scope
-//                    def assembleTask = variant.getAssemble()
-//                    def installPluginTask = project.task(installPluginTaskName)
-//                    installPluginTask.doLast {
-//                        pluginDebugger.startHostApp()
-//                        pluginDebugger.uninstall()
-//                        pluginDebugger.forceStopHostApp()
-//                        pluginDebugger.startHostApp()
-//                        pluginDebugger.install()
-//                    }
-//                    installPluginTask.group = AppConstant.TASKS_GROUP
-//                }
+    void action2(Project project) {
+        mProject = project;
+        System.out.println("===================================")
+        System.out.println("this is second gradle plugin")
+        System.out.println("===================================")
+        def isApp = project.plugins.hasPlugin(AppPlugin)
+        def isLib = project.plugins.hasPlugin(LibraryPlugin)
+        // 仅处理application合包
+        if (isApp) {
+            //def android = project.extensions.getByType(AppExtension)
+            def android = project.extensions.findByType(AppExtension)
+            android.applicationVariants.all { variant ->
+                def variantData = variant.variantData
+                def scope = variantData.scope
+                def assembleTask = variant.getAssembleProvider()
             }
+            CruzrFixJarTransform.inject(mProject, android)
         }
     }
 
